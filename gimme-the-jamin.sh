@@ -16,7 +16,7 @@ install_feature better-init
 install_feature skip-setup
 install_feature moonraker
 #install_feature fluidd
-install_feature screws_tilt_adjust
+#install_feature screws_tilt_adjust
 install_feature cartographer
 install_feature abort_homing
 mkdir -p /tmp/macros
