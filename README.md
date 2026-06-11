@@ -1,4 +1,4 @@
-# K2 Improvements
+# K2 Pro Improvements
 
 ## Live Component Status vs Mainline
 
