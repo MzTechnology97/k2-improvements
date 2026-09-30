@@ -1,120 +1,92 @@
-# K2 Pro Improvements
+# K2 Pro Improvements — K2-OpenHost reference fork
 
-## Live Component Status vs Mainline
+This repository is kept as a **K2 Pro / K2-OpenHost reference fork** in the public `k2-improvements` lineage.
 
-[![Fluidd](https://img.shields.io/badge/dynamic/json?url=https://api.github.com/repos/fluidd-core/fluidd/compare/develop...Jacob10383:fluidd:k2&query=$.behind_by&label=Fluidd&suffix=%20commits%20behind&color=blue&style=for-the-badge&logo=github)](https://github.com/Jacob10383/fluidd/tree/k2)  
-![Fluidd Last Update](https://img.shields.io/badge/dynamic/json?url=https://gist.githubusercontent.com/Jacob10383/f94d1bab6f84f53cd0a88e33c528d196/raw/fluidd-last-update.json&query=$.date&label=Last%20Synced&style=flat-square&color=gray)
+## Upstream lineage and credits
 
-[![Moonraker](https://img.shields.io/badge/dynamic/json?url=https://api.github.com/repos/Arksine/moonraker/compare/master...jacob10383:moonraker:k2&query=$.behind_by&label=Moonraker&suffix=%20commits%20behind&color=blue&style=for-the-badge&logo=github)](https://github.com/jacob10383/moonraker/tree/k2)  
-![Moonraker Last Update](https://img.shields.io/badge/dynamic/json?url=https://gist.githubusercontent.com/Jacob10383/f94d1bab6f84f53cd0a88e33c528d196/raw/moonraker-last-update.json&query=$.date&label=Last%20Synced&style=flat-square&color=gray)
+The original authorship chain is intentionally preserved:
 
-[![Cartographer](https://img.shields.io/badge/dynamic/json?url=https://api.github.com/repos/Cartographer3D/cartographer3d-plugin/compare/main...jacob10383:cartographer3d-plugin:main&query=$.behind_by&label=Cartographer&suffix=%20commits%20behind&color=blue&style=for-the-badge&logo=github)](https://github.com/jacob10383/cartographer3d-plugin)  
-![Cartographer Last Update](https://img.shields.io/badge/dynamic/json?url=https://gist.githubusercontent.com/Jacob10383/f94d1bab6f84f53cd0a88e33c528d196/raw/cartographer-last-update.json&query=$.date&label=Last%20Synced&style=flat-square&color=gray)
+1. **[jamincollins/k2-improvements](https://github.com/jamincollins/k2-improvements)** — original project and feature work;
+2. **[Jacob10383/k2-improvements](https://github.com/Jacob10383/k2-improvements)** — Jacob's fork, K2 integration work and the direct parent of this repository;
+3. **MzTechnology97/k2-improvements** — local K2 Pro/OpenHost reference fork.
 
-*Tracks my forks vs upstream as updates happen there, not here.*
+The original authors and contributors retain credit for their code, scripts, documentation and reverse-engineering work. This fork does not claim authorship of upstream discoveries or features.
 
-## Firmware & Cartographer Support
+## Role in K2-OpenHost
 
-**Recommended Firmware:** 1.1.3.13
+This fork is used as a source/reference while developing **[MzTechnology97/K2-OpenHost](https://github.com/MzTechnology97/K2-OpenHost)**.
 
-> [!WARNING]
-> 1.1.4.x is "compatabile" but the firmware itself has numerous known issues. Timing problems can be exacerbated when using Cartographer.
+K2-OpenHost has a different target architecture from the classic printer-side improvement stack:
 
-**Cartographer Support:**
-
-- Supports Cartographer v3 and v4
-- Includes custom flash tool for flashing either version directly on the K2
-- Includes new Cartographer plugin with custom modifications for K2 compatibility and optimizations
-
-## DISCLAIMER
-
-Use at your own risk, I'm not responsible for fires or broken dreams.  But you do get to keep both halves if something breaks.
-
-## Warning
-
-As a *heads up* these improvements are not compatible with Creality's *auto-calibration*.  In our experience we get better results through manual tuning.
-
-## Start Here at Bootstrap
-
-The Bootstrap is a requirement for the improvements to install properly, so this must be accomplished first. Of note, it will install entware tools necessary to accomplish the installs. Additionally, root is enabled by default with the password: 'creality_2024'. At some point, we recommend running command 'passwd' in the terminal to change the defualt password to something secure.
-
-It is recommend to perform a factory reset prior to install to avoid potential conflicts with previous modifications.  A factory reset can be achieved with the following command in a terminal on the K2:
-
-```raw
-echo "all" | /usr/bin/nc -U /var/run/wipe.sock
+```text
+K2 Pro T113
+  -> display/touch + hardware bridge
+  -> USB gadget transport
+       |
+       v
+Raspberry Pi CM5 / external Linux host
+  -> Kalico
+  -> Moonraker
+  -> K2-specific extras
 ```
 
-1. Enable root access on the K2 Plus by going to Settings, General tab and root on the physical screen. Take note of the password.
-1. Download the latest bootstrap release from [https://github.com/Jacob10383/k2-improvements/releases](https://github.com/Jacob10383/k2-improvements/releases) and extract the folder.
-1. To install the bootstrap, connect to your K2 Plus's Fluid interface via browser **<http://PrinterIP:4408>**
-1. Unzip the downloaded bootstrap folder and upload the extracted bootstrap folder by going to Configuration **{...}**, **+**, **Upload Folder**, and selecting the extracted bootstrap folder.
-    ![image](https://github.com/user-attachments/assets/3d242efc-4cf8-412d-b4b0-59507720f5ad)
-1. SSH to the K2 Plus using any terminal tool (e.g. PuTTy) using the printers ip adress, port 22, user "root" and the password noted in step 1.
-1. If you execute a wipe, you will need to go through setup on the K2 screen and complete all the way through creality cloud connection. This will give you the wifi/network connection that you will need and connect appropriately to creality cloud. Stop at the calibration, you can do this later.
-1. To start the boostrap install paste into the terminal `sh /mnt/UDISK/printer_data/config/bootstrap/bootstrap.sh` and hit enter.
-1. Once the setup completes, it will log you out of your terminal and you will need to log back in.
+The current integrated Kalico tree is:
 
-## Installers
+- **[MzTechnology97/kalico-k2pro](https://github.com/MzTechnology97/kalico-k2pro)**, branch `k2-pro-openhost`.
 
-A unified installation menu is *planned*.  For now each feature can be found under the [features](./features/) directory.  A `README.md` and installation script `install.sh` are provided for each option.
+The versioned Jacobean K2 extra/patch source is:
 
-The unified installer will understand inter option dependencies and ensure they are met.
+- **[MzTechnology97/k2-pro-custom-firmware](https://github.com/MzTechnology97/k2-pro-custom-firmware)**, branch `k2-openhost`.
 
-For now, there are two default installations:   **Note either option will take some time and seem to hang at times. Be patient as it is moving lots of files and creating venvs for klipper and moonraker full installs
+## About K2 Plus references in this repository
 
-- Option 1: `gimme-the-jamin.sh` - Used to install carto **NOTE MUST HAVE CARTO FLASHED AND PLUGGED IN AND READY TO GO** by following instructions [here](https://github.com/Jacob10383/k2-improvements/blob/main/features/cartographer/firmware/README.md) first.
+Many feature READMEs, installer instructions and historical notes in this fork come directly from the upstream projects and may still say **K2 Plus**. Those references are intentionally retained where they describe the original upstream target or installation flow.
 
-    To run, use the terminal command `sh /mnt/UDISK/root/k2-improvements/gimme-the-jamin.sh`
+They should **not** be interpreted as a claim that every K2 Plus value or procedure applies unchanged to K2 Pro. In the OpenHost project, K2 Pro behavior is either:
 
-    After install you will need to calibrate the carto by following instructions [here](https://github.com/Jacob10383/k2-improvements/blob/main/features/cartographer/SETUP.md)
+- verified on the real K2 Pro hardware;
+- explicitly derived from public source/configuration;
+- or marked as not yet tested.
 
-- Option 2: `no-carto.sh` - Use this if you aren't going to use a carto, or don't have your carto yet.
+For current K2 Pro/OpenHost procedures and test status, use the K2-OpenHost repository rather than the legacy printer-side install instructions in this fork.
 
-    To run, use the terminal command `sh /mnt/UDISK/root/k2-improvements/no-carto.sh`
+## What remains useful here
 
-They both install the same set of features (those that I use).  The only difference is whether or not the cartographer bits are installed. If you start with no-carto.sh and later get a carto, you can then run the gimme-the-jamin.sh script and it will install all of the necessary carto items appropriately.
+This repository is still valuable for:
 
-You are still welcome to hand pick which features you want to install.
+- Cartographer integration history and tooling;
+- K2 printer-side improvement patterns;
+- Moonraker/Fluidd integration references;
+- macros and calibration approaches;
+- bootstrapping and stock-system observations;
+- upstream feature history from jamincollins and Jacob10383.
 
-## Donations
+See [K2-OPENHOST.md](K2-OPENHOST.md) for how this repository fits into the current project.
 
-Donations are definitely *not required*, they are appreciated.  If you'd like to donate you can do so [here](https://ko-fi.com/jacob10383).
+## Original upstream documentation
 
-## Features
+The feature documentation under `features/`, `bed_leveling/`, and the existing scripts is preserved from the upstream lineage. For the most current original project documentation, consult:
 
-- [axis_twist_compensation](./features/axis_twist_compensation/README.md)
-- [better init](./features/better-init/README.md)
-- [better root](./features/better-root/README.md) home directory
-- [Cartographer](./features/cartographer/README.md) support
-- installs [Entware](https://github.com/Entware/Entware)
-- updated [Fluidd](./features/fluidd/README.md)
-- updated [Moonraker](./features/moonraker/README.md)
-- [Obico](./features/obico/README.md) - *WIP*
-- implements [SCREWS_TILT_CALCULATE](https://www.klipper3d.org/Manual_Level.html#adjusting-bed-leveling-screws-using-the-bed-probe)
+- [Jacob10383/k2-improvements](https://github.com/Jacob10383/k2-improvements)
+- [jamincollins/k2-improvements](https://github.com/jamincollins/k2-improvements)
 
-And a few quality of life improvement macros
+## Additional upstream projects credited by the original work
 
-- [MESH_IF_NEEDED](./features/macros/bed_mesh/README.md)
-- [START_PRINT](./features/macros/start_print/README.md)
-- [M191](./features/macros/m191/README.md)
+The original project also builds on or integrates work from:
 
-### Bed Leveling
+- **Guilouz**
+- **stranula**
+- **juliosueiras**
+- **Moonraker / Arksine**
+- **Klipper3d**
+- **Fluidd**
+- **Entware**
+- **Obico**
+- **SimplyPrint**
+- **Cartographer3D** and contributors
 
-Sadly, many of the K2 beds resemble a taco or valley.  In the [bed_leveling](bed_leveling) folder you will find a python based script and short writeup on how to apply aluminium tape to shim the bed.
+Their original references remain present throughout the inherited feature documentation.
 
-## Credits
+## Status
 
-- [@Guilouz](https://github.com/Guilouz) - standing on the shoulders of giants
-- [@stranula](https://github.com/stranula)
-- [@juliosueiras](https://github.com/juliosueiras)
-
-- Moonraker - [https://github.com/Arksine/moonraker](https://github.com/Arksine/moonraker)
-- Klipper - [https://github.com/Klipper3d/klipper](https://github.com/Klipper3d/klipper)
-- Fluidd - [https://github.com/fluidd-core/fluidd](https://github.com/fluidd-core/fluidd)
-- Entware - [https://github.com/Entware/Entware](https://github.com/Entware/Entware)
-- Obico - [https://www.obico.io/](https://www.obico.io/)
-- SimplyPrint - [https://simplyprint.io/](https://simplyprint.io/)
-
-## FAQ
-
-See the [FAQ](./FAQ.md)
+This fork is a reference component of an experimental project. It is not the canonical installation guide for K2-OpenHost and should not be treated as a drop-in CM5/OpenHost installer.
