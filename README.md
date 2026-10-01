@@ -14,54 +14,74 @@ The original authors and contributors retain credit for their code, scripts, doc
 
 ## Role in K2-OpenHost
 
-This fork is used as a source/reference while developing **[MzTechnology97/K2-OpenHost](https://github.com/MzTechnology97/K2-OpenHost)**.
+This fork remains a technical source/reference while developing **[MzTechnology97/K2-OpenHost](https://github.com/MzTechnology97/K2-OpenHost)**. It is not the runtime CM5 repository.
 
-K2-OpenHost has a different target architecture from the classic printer-side improvement stack:
+Current OpenHost split:
+
+- **[MzTechnology97/kalico-k2pro](https://github.com/MzTechnology97/kalico-k2pro)**, branch `k2-pro-openhost` — integrated external-host Kalico runtime;
+- **[MzTechnology97/k2-pro-custom-firmware](https://github.com/MzTechnology97/k2-pro-custom-firmware)**, branch `k2-openhost` — versioned K2/Jacobean extra and compatibility history;
+- **[MzTechnology97/cartographer3d-plugin-k2openhost](https://github.com/MzTechnology97/cartographer3d-plugin-k2openhost)** — Cartographer K2/OpenHost integration based on upstream Cartographer plus Jacob's K2 port;
+- **this repository** — reference for printer-side K2 improvements, bootstrap patterns, Cartographer history, macros and service integration ideas.
+
+## Current architecture
 
 ```text
 K2 Pro T113
   -> display/touch + hardware bridge
   -> USB gadget transport
        |
-       v
+       +-- ttyUSB0 -> Main MCU
+       +-- ttyUSB1 -> Nozzle MCU
+       `-- ttyUSB2 -> RS-485 / CFS / closed-loop
+
 Raspberry Pi CM5 / external Linux host
-  -> Kalico
+  -> kalico-k2pro:k2-pro-openhost
   -> Moonraker
-  -> K2-specific extras
+  -> Mainsail
+  -> Cartographer direct USB
 ```
 
-The current integrated Kalico tree is:
+The project no longer targets Cartographer as a fourth multiplexed T113 gadget channel. The MUX/DEMUX experiment carried live Cartographer data but added avoidable reset/re-enumeration complexity. Direct USB on the CM5 is now the preferred topology.
 
-- **[MzTechnology97/kalico-k2pro](https://github.com/MzTechnology97/kalico-k2pro)**, branch `k2-pro-openhost`.
+## K2 Plus references in this repository
 
-The versioned Jacobean K2 extra/patch source is:
+Many inherited feature READMEs, installer instructions and historical notes still say **K2 Plus**. Those references are intentionally retained where they describe the original upstream target or installation flow.
 
-- **[MzTechnology97/k2-pro-custom-firmware](https://github.com/MzTechnology97/k2-pro-custom-firmware)**, branch `k2-openhost`.
-
-## About K2 Plus references in this repository
-
-Many feature READMEs, installer instructions and historical notes in this fork come directly from the upstream projects and may still say **K2 Plus**. Those references are intentionally retained where they describe the original upstream target or installation flow.
-
-They should **not** be interpreted as a claim that every K2 Plus value or procedure applies unchanged to K2 Pro. In the OpenHost project, K2 Pro behavior is either:
-
-- verified on the real K2 Pro hardware;
-- explicitly derived from public source/configuration;
-- or marked as not yet tested.
+They should **not** be interpreted as a claim that every K2 Plus value or procedure applies unchanged to K2 Pro. OpenHost uses actual K2 Pro hardware validation and records untested assumptions explicitly.
 
 For current K2 Pro/OpenHost procedures and test status, use the K2-OpenHost repository rather than the legacy printer-side install instructions in this fork.
 
 ## What remains useful here
 
-This repository is still valuable for:
+This repository remains valuable for:
 
-- Cartographer integration history and tooling;
+- Cartographer integration history and bootstrapping ideas;
 - K2 printer-side improvement patterns;
 - Moonraker/Fluidd integration references;
 - macros and calibration approaches;
-- bootstrapping and stock-system observations;
+- stock-system observations;
 - upstream feature history from jamincollins and Jacob10383.
 
-See [K2-OPENHOST.md](K2-OPENHOST.md) for how this repository fits into the current project.
+The current Cartographer plugin itself is maintained separately in `cartographer3d-plugin-k2openhost` so newer upstream plugin behavior can be integrated without treating this historical bootstrap repository as the runtime package.
+
+## Current OpenHost milestone — 2026-10-01
+
+The real K2 Pro has now validated from the external CM5/Kalico stack:
+
+- three dedicated T113 gadget serial channels;
+- Main + Nozzle MCU simultaneous communication;
+- RS-485 closed-loop motor control;
+- normal CoreXY motion;
+- X/Y sensorless/stall homing;
+- correct Z direction;
+- complete homing with the stock PRTouch path;
+- bed/nozzle/chamber heaters and PID tuning;
+- emergency heater shutdown;
+- successful Klippain-ShakeTune resonance test;
+- protected CFS observation mode;
+- Cartographer plugin loading/streaming through the earlier experimental bridge, with final direct-USB validation still pending.
+
+See [K2-OPENHOST.md](K2-OPENHOST.md) and the canonical K2-OpenHost repository for the detailed chronology.
 
 ## Original upstream documentation
 
